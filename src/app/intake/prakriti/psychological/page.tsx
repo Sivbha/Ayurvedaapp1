@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { proxyFetch, proxyUpsert } from '@/lib/proxy-db';
+import { proxyFetch, proxyUpsert, proxyDelete } from '@/lib/proxy-db';
 import { useWizard } from '../../layout';
 import prakritiRules from '@/lib/rules/prakriti-weights.json';
 import { useRouter } from 'next/navigation';
@@ -32,12 +32,13 @@ export default function PrakritiPsychologicalPage() {
     const question = questions[questionKey as keyof typeof questions];
     const option = (question as any).options[answerValue];
     try {
+      await proxyDelete('prakriti_answers', { assessment_id: assessmentId, question_key: questionKey });
       await proxyUpsert('prakriti_answers', {
         assessment_id: assessmentId, category: 'psychological',
         question_key: questionKey, answer_value: answerValue,
         answer_label: option?.label || '',
         dosha_scores: option?.dosha || { vata: 0, pitta: 0, kapha: 0 },
-      }, 'assessment_id, question_key');
+      });
     } catch (err) { console.error(err); }
   };
 
@@ -76,12 +77,13 @@ export default function PrakritiPsychologicalPage() {
                   const updated = isSelected ? current.filter((v: string) => v !== optValue) : [...current, optValue];
                   setAnswers(prev => ({ ...prev, emotional_tendencies: updated }));
                   try {
+                    await proxyDelete('prakriti_answers', { assessment_id: assessmentId, question_key: 'emotional_tendencies' });
                     await proxyUpsert('prakriti_answers', {
                       assessment_id: assessmentId, category: 'psychological',
                       question_key: 'emotional_tendencies', answer_value: updated.join(','),
                       answer_label: updated.join(', '),
                       dosha_scores: opt.dosha || { vata: 0, pitta: 0, kapha: 0 },
-                    }, 'assessment_id, question_key');
+                    });
                   } catch (err) { console.error(err); }
                 }}
                 className={`w-full text-left rounded-lg border px-4 py-3 text-sm transition-colors ${

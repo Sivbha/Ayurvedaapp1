@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { proxyFetch, proxyUpsert } from '@/lib/proxy-db';
+import { proxyFetch, proxyUpsert, proxyDelete } from '@/lib/proxy-db';
 import { useWizard } from '../../layout';
 import vikritiRules from '@/lib/rules/vikriti-weights.json';
 import { useRouter } from 'next/navigation';
@@ -12,7 +12,7 @@ export default function VikritiReproductivePage() {
   const [severities, setSeverities] = useState<Record<string, number>>({});
   const [showSection, setShowSection] = useState(false);
 
-  const questions = (vikritiRules.categories as any).reproductive?.questions || {};
+  const questions = (vikritiRules.categories as any).reproductive || {};
 
   useEffect(() => {
     if (!assessmentId) return;
@@ -29,11 +29,12 @@ export default function VikritiReproductivePage() {
     setSeverities(prev => ({ ...prev, [questionKey]: severity }));
     const q = questions[questionKey as keyof typeof questions];
     try {
+      await proxyDelete('vikriti_answers', { assessment_id: assessmentId, question_key: questionKey });
       await proxyUpsert('vikriti_answers', {
         assessment_id: assessmentId, category: 'reproductive',
         question_key: questionKey, severity,
         dosha_impact: (q as any).doshaImpact || { vata: 0, pitta: 0, kapha: 0 },
-      }, 'assessment_id, question_key');
+      });
     } catch (err) { console.error(err); }
   };
 

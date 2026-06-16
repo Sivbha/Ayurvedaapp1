@@ -62,7 +62,7 @@ export default function VikritiReviewPage() {
           </div>
         );
       })}
-      <button onClick={() => router.push('/intake/food-diary/day-1')}
+      <button onClick={() => router.push('/intake/food-diary/1')}
         className="w-full rounded-lg bg-amber-700 px-4 py-2 text-white hover:bg-amber-800">
         Continue to Food Diary
       </button>

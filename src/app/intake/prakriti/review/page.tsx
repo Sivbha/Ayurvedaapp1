@@ -16,7 +16,9 @@ export default function PrakritiReviewPage() {
     if (!assessmentId) return;
     (async () => {
       try {
-        const { data } = await proxyFetch('prakriti_answers', { assessment_id: assessmentId });
+        const response = await proxyFetch('prakriti_answers', { assessment_id: assessmentId });
+        console.log('[review] fetch response:', response);
+        const data = response.data;
         if (data) {
           const grouped: Record<string, any[]> = {};
           data.forEach((a: any) => {

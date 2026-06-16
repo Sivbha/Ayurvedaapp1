@@ -27,3 +27,13 @@ export async function proxyUpdate(table: string, data: any, filters: Record<stri
   if (!res.ok) throw new Error(`proxy update failed: ${res.status}`);
   return res.json();
 }
+
+export async function proxyDelete(table: string, filters: Record<string, any>) {
+  const res = await fetch('/api/assessments/proxy', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'delete', table, filters }),
+  });
+  if (!res.ok) throw new Error(`proxy delete failed: ${res.status}`);
+  return res.json();
+}

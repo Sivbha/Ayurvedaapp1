@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { proxyFetch, proxyUpsert } from '@/lib/proxy-db';
+import { proxyFetch, proxyUpsert, proxyDelete } from '@/lib/proxy-db';
 import { useWizard } from '../layout';
 import { useRouter } from 'next/navigation';
 
@@ -65,10 +65,11 @@ export default function SymptomsLifestylePage() {
     const newEntry = { ...entries[category], symptoms: updated };
     setEntries(prev => ({ ...prev, [category]: newEntry }));
     try {
+      await proxyDelete('symptom_entries', { assessment_id: assessmentId, category });
       await proxyUpsert('symptom_entries', {
         assessment_id: assessmentId, category, symptoms: updated,
         severity: newEntry.severity || 'mild', notes: newEntry.notes || '',
-      }, 'assessment_id, category');
+      });
     } catch (err) { console.error(err); }
   };
 
@@ -76,12 +77,13 @@ export default function SymptomsLifestylePage() {
     const newEntry = { ...entries[category], [field]: value };
     setEntries(prev => ({ ...prev, [category]: newEntry }));
     try {
+      await proxyDelete('symptom_entries', { assessment_id: assessmentId, category });
       await proxyUpsert('symptom_entries', {
         assessment_id: assessmentId, category,
         symptoms: newEntry.symptoms || [],
         severity: newEntry.severity || 'mild',
         notes: field === 'notes' ? value : newEntry.notes || '',
-      }, 'assessment_id, category');
+      });
     } catch (err) { console.error(err); }
   };
 

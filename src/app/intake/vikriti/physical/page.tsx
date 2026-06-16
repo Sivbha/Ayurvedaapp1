@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { proxyFetch, proxyUpsert } from '@/lib/proxy-db';
+import { proxyFetch, proxyUpsert, proxyDelete } from '@/lib/proxy-db';
 import { useWizard } from '../../layout';
 import vikritiRules from '@/lib/rules/vikriti-weights.json';
 import { useRouter } from 'next/navigation';
@@ -11,7 +11,7 @@ export default function VikritiPhysicalPage() {
   const router = useRouter();
   const [severities, setSeverities] = useState<Record<string, number>>({});
 
-  const questions = (vikritiRules.categories as any).physical.questions;
+  const questions = (vikritiRules.categories as any).physical;
 
   useEffect(() => {
     if (!assessmentId) return;
@@ -31,15 +31,16 @@ export default function VikritiPhysicalPage() {
     setSeverities(prev => ({ ...prev, [questionKey]: severity }));
     const q = questions[questionKey as keyof typeof questions];
     try {
+      await proxyDelete('vikriti_answers', { assessment_id: assessmentId, question_key: questionKey });
       await proxyUpsert('vikriti_answers', {
         assessment_id: assessmentId, category: 'physical',
         question_key: questionKey, severity,
         dosha_impact: (q as any).doshaImpact || { vata: 0, pitta: 0, kapha: 0 },
-      }, 'assessment_id, question_key');
+      });
     } catch (err) { console.error(err); }
   };
 
-  const allAnswered = Object.keys(questions).every(q => (severities[q] ?? 0) > 0);
+  const allAnswered = Object.keys(questions).every(q => severities[q] !== undefined);
 
   return (
     <div className="space-y-6">

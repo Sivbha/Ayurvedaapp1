@@ -27,7 +27,7 @@ export default function FoodDiaryDayPage() {
   const params = useParams();
   const router = useRouter();
   const { assessmentId } = useWizard();
-  const dayNumber = parseInt(params.day as string);
+  const dayNumber = parseInt(params.day as string) || 0;
 
   const [form, setForm] = useState({
     date: new Date().toISOString().split('T')[0],
@@ -76,10 +76,15 @@ export default function FoodDiaryDayPage() {
 
   const save = async () => {
     if (!assessmentId) return;
+    if (!dayNumber || dayNumber < 1 || dayNumber > 7) {
+      console.error('Invalid day number:', dayNumber, 'params:', params);
+      alert('Invalid day number. Please refresh the page.');
+      return;
+    }
     try {
-      await proxyUpsert('food_diary_entries', {
+      const res = await proxyUpsert('food_diary_entries', {
         assessment_id: assessmentId, day_number: dayNumber, date: form.date,
-        wake_time: form.wakeTime, breakfast: form.breakfast, lunch: form.lunch,
+        wake_time: form.wakeTime || null, breakfast: form.breakfast, lunch: form.lunch,
         dinner: form.dinner, snacks: form.snacks,
         caffeine: form.caffeine, sugar_sweets: form.sugarSweets, fried_foods: form.friedFoods,
         spicy_foods: form.spicyFoods, fermented_foods: form.fermentedFoods,
@@ -88,7 +93,11 @@ export default function FoodDiaryDayPage() {
         meal_size: form.mealSize, eating_speed: form.eatingSpeed,
         hunger_before_meals: form.hungerBeforeMeals, symptoms_after_meals: form.symptomsAfterMeals,
       }, 'assessment_id, day_number');
-    } catch (err) { console.error(err); }
+      if (res?.error) {
+        console.error('Food diary save error:', res.error);
+        alert('Failed to save. Check console for details.');
+      }
+    } catch (err) { console.error(err); alert('Failed to save: ' + err); }
   };
 
   const updateMeal = (meal: 'breakfast' | 'lunch' | 'dinner' | 'snacks', field: string, value: any) => {
@@ -237,10 +246,10 @@ export default function FoodDiaryDayPage() {
       </div>
 
       <div className="flex gap-3">
-        <button onClick={() => router.push(dayNumber > 1 ? `/intake/food-diary/day-${dayNumber - 1}` : '/intake/vikriti/review')}
+        <button onClick={() => router.push(dayNumber > 1 ? `/intake/food-diary/${dayNumber - 1}` : '/intake/vikriti/review')}
           className="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50">Previous</button>
         <button onClick={save} className="rounded-lg border border-amber-300 px-4 py-2 text-amber-700 hover:bg-amber-50">Save Day</button>
-        <button onClick={async () => { await save(); router.push(dayNumber < 7 ? `/intake/food-diary/day-${dayNumber + 1}` : '/intake/food-diary/review'); }}
+        <button onClick={async () => { await save(); router.push(dayNumber < 7 ? `/intake/food-diary/${dayNumber + 1}` : '/intake/food-diary/review'); }}
           className="flex-1 rounded-lg bg-amber-700 px-4 py-2 text-white hover:bg-amber-800">
           {dayNumber < 7 ? 'Save & Next Day' : 'Save & Review'}
         </button>

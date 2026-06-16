@@ -11,7 +11,7 @@ const STEP_PATHS = [
   '/intake/safety',
   '/intake/prakriti/physical',
   '/intake/vikriti/digestive',
-  '/intake/food-diary/day-1',
+  '/intake/food-diary/1',
   '/intake/symptoms-lifestyle',
   '/intake/review-submit',
 ];

@@ -92,7 +92,7 @@ export default function ReviewSubmitPage() {
         <div className="rounded-lg border border-gray-200 p-4">
           <div className="flex items-center justify-between">
             <h3 className="font-medium text-gray-900">Food Diary</h3>
-            <a href="/intake/food-diary/day-1" className="text-sm text-amber-700">Edit</a>
+            <a href="/intake/food-diary/1" className="text-sm text-amber-700">Edit</a>
           </div>
           <p className="mt-2 text-sm text-gray-500">7-day food diary completed</p>
         </div>

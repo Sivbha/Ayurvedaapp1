@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useWizard } from '../../layout';
 import prakritiRules from '@/lib/rules/prakriti-weights.json';
 import { useRouter } from 'next/navigation';
-import { proxyFetch, proxyUpsert } from '@/lib/proxy-db';
+import { proxyFetch, proxyUpsert, proxyDelete } from '@/lib/proxy-db';
 
 export default function PrakritiPhysicalPage() {
   const { assessmentId } = useWizard();
@@ -36,6 +36,7 @@ export default function PrakritiPhysicalPage() {
     const option = (question as any).options[answerValue];
     
     try {
+      await proxyDelete('prakriti_answers', { assessment_id: assessmentId, question_key: questionKey });
       await proxyUpsert('prakriti_answers', {
         assessment_id: assessmentId,
         category: 'physical',
@@ -43,7 +44,7 @@ export default function PrakritiPhysicalPage() {
         answer_value: answerValue,
         answer_label: option?.label || '',
         dosha_scores: option?.dosha || { vata: 0, pitta: 0, kapha: 0 },
-      }, 'assessment_id, question_key');
+      });
     } catch (err) {
       console.error('Save prakriti answer error:', err);
     }
