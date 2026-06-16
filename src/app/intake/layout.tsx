@@ -16,6 +16,20 @@ const STEP_PATHS = [
   '/intake/review-submit',
 ];
 
+const STEP_MATCH = [
+  '/intake/basic-details',
+  '/intake/safety',
+  '/intake/prakriti/physical',
+  '/intake/vikriti/digestive',
+  '/intake/food-diary/',  // prefix match for all day pages
+  '/intake/symptoms-lifestyle',
+  '/intake/review-submit',
+];
+
+function findStep(pathname: string): number {
+  return STEP_MATCH.findIndex(p => pathname.startsWith(p));
+}
+
 export default function IntakeLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -25,7 +39,7 @@ export default function IntakeLayout({ children }: { children: React.ReactNode }
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'pending'>('saved');
 
   useEffect(() => {
-    const currentIdx = STEP_PATHS.findIndex(p => pathname.startsWith(p));
+    const currentIdx = findStep(pathname);
     if (currentIdx >= 0) setCurrentStep(currentIdx + 1);
   }, [pathname]);
 
@@ -48,7 +62,7 @@ export default function IntakeLayout({ children }: { children: React.ReactNode }
       const data = await res.json();
       setAssessmentId(data.assessmentId);
       if (data.currentStep) setCurrentStep(data.currentStep);
-      if (!STEP_PATHS.some(p => pathname.startsWith(p))) {
+      if (findStep(pathname) < 0) {
         router.push(STEP_PATHS[(data.currentStep || 1) - 1] || STEP_PATHS[0]);
       }
     } catch (err) {
