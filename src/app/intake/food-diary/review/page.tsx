@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { proxyFetch } from '@/lib/proxy-db';
 import { useWizard } from '../../layout';
 import { useRouter } from 'next/navigation';
 
@@ -9,18 +9,19 @@ const DAY_LABELS = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7
 
 export default function FoodDiaryReviewPage() {
   const { assessmentId } = useWizard();
-  const supabase = createClient();
   const router = useRouter();
   const [entries, setEntries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!assessmentId) return;
-    supabase.from('food_diary_entries').select('*').eq('assessment_id', assessmentId).order('day_number')
-      .then(({ data }) => {
+    (async () => {
+      try {
+        const { data } = await proxyFetch('food_diary_entries', { assessment_id: assessmentId }, { order: { column: 'day_number' } });
         setEntries(data || []);
         setLoading(false);
-      });
+      } catch (err) { console.error(err); }
+    })();
   }, [assessmentId]);
 
   if (loading) return <div className="text-center py-8">Loading...</div>;

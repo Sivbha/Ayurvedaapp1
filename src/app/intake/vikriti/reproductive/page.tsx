@@ -1,14 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { proxyFetch, proxyUpsert } from '@/lib/proxy-db';
 import { useWizard } from '../../layout';
 import vikritiRules from '@/lib/rules/vikriti-weights.json';
 import { useRouter } from 'next/navigation';
 
 export default function VikritiReproductivePage() {
   const { assessmentId } = useWizard();
-  const supabase = createClient();
   const router = useRouter();
   const [severities, setSeverities] = useState<Record<string, number>>({});
   const [showSection, setShowSection] = useState(false);
@@ -16,22 +15,26 @@ export default function VikritiReproductivePage() {
   const questions = (vikritiRules.categories as any).reproductive?.questions || {};
 
   useEffect(() => {
-    // Check if client is female
-    supabase.from('assessments').select('sex').eq('id', assessmentId).single()
-      .then(({ data }) => {
-        if (data?.sex === 'female') setShowSection(true);
+    if (!assessmentId) return;
+    (async () => {
+      try {
+        const { data } = await proxyFetch('assessments', { id: assessmentId }, { select: 'sex' });
+        if (data?.[0]?.sex === 'female') setShowSection(true);
         else setShowSection(false);
-      });
+      } catch (err) { console.error(err); }
+    })();
   }, [assessmentId]);
 
   const handleSeverityChange = async (questionKey: string, severity: number) => {
     setSeverities(prev => ({ ...prev, [questionKey]: severity }));
     const q = questions[questionKey as keyof typeof questions];
-    await supabase.from('vikriti_answers').upsert({
-      assessment_id: assessmentId, category: 'reproductive',
-      question_key: questionKey, severity,
-      dosha_impact: (q as any).doshaImpact || { vata: 0, pitta: 0, kapha: 0 },
-    }, { onConflict: 'assessment_id, question_key' });
+    try {
+      await proxyUpsert('vikriti_answers', {
+        assessment_id: assessmentId, category: 'reproductive',
+        question_key: questionKey, severity,
+        dosha_impact: (q as any).doshaImpact || { vata: 0, pitta: 0, kapha: 0 },
+      }, 'assessment_id, question_key');
+    } catch (err) { console.error(err); }
   };
 
   return (

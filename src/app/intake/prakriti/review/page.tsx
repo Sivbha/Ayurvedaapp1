@@ -1,22 +1,22 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { proxyFetch } from '@/lib/proxy-db';
 import { useWizard } from '../../layout';
 import { useRouter } from 'next/navigation';
 import prakritiRules from '@/lib/rules/prakriti-weights.json';
 
 export default function PrakritiReviewPage() {
   const { assessmentId } = useWizard();
-  const supabase = createClient();
   const router = useRouter();
   const [answersByCategory, setAnswersByCategory] = useState<Record<string, any[]>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!assessmentId) return;
-    supabase.from('prakriti_answers').select('*').eq('assessment_id', assessmentId)
-      .then(({ data }) => {
+    (async () => {
+      try {
+        const { data } = await proxyFetch('prakriti_answers', { assessment_id: assessmentId });
         if (data) {
           const grouped: Record<string, any[]> = {};
           data.forEach((a: any) => {
@@ -26,7 +26,8 @@ export default function PrakritiReviewPage() {
           setAnswersByCategory(grouped);
         }
         setLoading(false);
-      });
+      } catch (err) { console.error(err); }
+    })();
   }, [assessmentId]);
 
   const allCategories = ['physical', 'metabolic', 'behavioral', 'psychological'];

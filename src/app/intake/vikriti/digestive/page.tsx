@@ -1,14 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { proxyFetch, proxyUpsert } from '@/lib/proxy-db';
 import { useWizard } from '../../layout';
 import vikritiRules from '@/lib/rules/vikriti-weights.json';
 import { useRouter } from 'next/navigation';
 
 export default function VikritiDigestivePage() {
   const { assessmentId } = useWizard();
-  const supabase = createClient();
   const router = useRouter();
   const [severities, setSeverities] = useState<Record<string, number>>({});
 
@@ -16,25 +15,28 @@ export default function VikritiDigestivePage() {
 
   useEffect(() => {
     if (!assessmentId) return;
-    supabase.from('vikriti_answers').select('question_key, severity')
-      .eq('assessment_id', assessmentId).eq('category', 'digestive')
-      .then(({ data }) => {
+    (async () => {
+      try {
+        const { data } = await proxyFetch('vikriti_answers', { assessment_id: assessmentId, category: 'digestive' }, { select: 'question_key, severity' });
         if (data) {
           const loaded: Record<string, number> = {};
           data.forEach((a: any) => loaded[a.question_key] = a.severity);
           setSeverities(prev => ({ ...prev, ...loaded }));
         }
-      });
+      } catch (err) { console.error(err); }
+    })();
   }, [assessmentId]);
 
   const handleSeverityChange = async (questionKey: string, severity: number) => {
     setSeverities(prev => ({ ...prev, [questionKey]: severity }));
     const q = questions[questionKey as keyof typeof questions];
-    await supabase.from('vikriti_answers').upsert({
-      assessment_id: assessmentId, category: 'digestive',
-      question_key: questionKey, severity,
-      dosha_impact: (q as any).doshaImpact || { vata: 0, pitta: 0, kapha: 0 },
-    }, { onConflict: 'assessment_id, question_key' });
+    try {
+      await proxyUpsert('vikriti_answers', {
+        assessment_id: assessmentId, category: 'digestive',
+        question_key: questionKey, severity,
+        dosha_impact: (q as any).doshaImpact || { vata: 0, pitta: 0, kapha: 0 },
+      }, 'assessment_id, question_key');
+    } catch (err) { console.error(err); }
   };
 
   const allAnswered = Object.keys(questions).every(q => (severities[q] ?? 0) > 0);

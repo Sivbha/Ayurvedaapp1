@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { proxyFetch, proxyUpsert } from '@/lib/proxy-db';
 import { useWizard } from '../../layout';
 
 const FOOD_CATEGORIES = [
@@ -27,7 +27,6 @@ export default function FoodDiaryDayPage() {
   const params = useParams();
   const router = useRouter();
   const { assessmentId } = useWizard();
-  const supabase = createClient();
   const dayNumber = parseInt(params.day as string);
 
   const [form, setForm] = useState({
@@ -47,9 +46,9 @@ export default function FoodDiaryDayPage() {
 
   useEffect(() => {
     if (!assessmentId || loaded) return;
-    supabase.from('food_diary_entries').select('*')
-      .eq('assessment_id', assessmentId).eq('day_number', dayNumber)
-      .then(({ data }) => {
+    (async () => {
+      try {
+        const { data } = await proxyFetch('food_diary_entries', { assessment_id: assessmentId, day_number: dayNumber });
         if (data?.[0]) {
           const d = data[0];
           setForm({
@@ -71,22 +70,25 @@ export default function FoodDiaryDayPage() {
           });
         }
         setLoaded(true);
-      });
+      } catch (err) { console.error(err); }
+    })();
   }, [assessmentId, dayNumber, loaded]);
 
   const save = async () => {
     if (!assessmentId) return;
-    await supabase.from('food_diary_entries').upsert({
-      assessment_id: assessmentId, day_number: dayNumber, date: form.date,
-      wake_time: form.wakeTime, breakfast: form.breakfast, lunch: form.lunch,
-      dinner: form.dinner, snacks: form.snacks,
-      caffeine: form.caffeine, sugar_sweets: form.sugarSweets, fried_foods: form.friedFoods,
-      spicy_foods: form.spicyFoods, fermented_foods: form.fermentedFoods,
-      dairy: form.dairy, gluten_wheat: form.glutenWheat, beans_legumes: form.beansLegumes,
-      raw_salads: form.rawSalads, leftovers: form.leftovers, eating_out: form.eatingOut,
-      meal_size: form.mealSize, eating_speed: form.eatingSpeed,
-      hunger_before_meals: form.hungerBeforeMeals, symptoms_after_meals: form.symptomsAfterMeals,
-    }, { onConflict: 'assessment_id, day_number' });
+    try {
+      await proxyUpsert('food_diary_entries', {
+        assessment_id: assessmentId, day_number: dayNumber, date: form.date,
+        wake_time: form.wakeTime, breakfast: form.breakfast, lunch: form.lunch,
+        dinner: form.dinner, snacks: form.snacks,
+        caffeine: form.caffeine, sugar_sweets: form.sugarSweets, fried_foods: form.friedFoods,
+        spicy_foods: form.spicyFoods, fermented_foods: form.fermentedFoods,
+        dairy: form.dairy, gluten_wheat: form.glutenWheat, beans_legumes: form.beansLegumes,
+        raw_salads: form.rawSalads, leftovers: form.leftovers, eating_out: form.eatingOut,
+        meal_size: form.mealSize, eating_speed: form.eatingSpeed,
+        hunger_before_meals: form.hungerBeforeMeals, symptoms_after_meals: form.symptomsAfterMeals,
+      }, 'assessment_id, day_number');
+    } catch (err) { console.error(err); }
   };
 
   const updateMeal = (meal: 'breakfast' | 'lunch' | 'dinner' | 'snacks', field: string, value: any) => {
@@ -95,8 +97,11 @@ export default function FoodDiaryDayPage() {
 
   const copyFromPreviousDay = async () => {
     if (dayNumber <= 1) return;
-    const { data } = await supabase.from('food_diary_entries').select('*')
-      .eq('assessment_id', assessmentId).eq('day_number', dayNumber - 1).single();
+    let data;
+    try {
+      const result = await proxyFetch('food_diary_entries', { assessment_id: assessmentId, day_number: dayNumber - 1 });
+      data = result.data?.[0];
+    } catch (err) { console.error(err); return; }
     if (data) {
       setForm({
         date: new Date().toISOString().split('T')[0], wakeTime: data.wake_time || '',

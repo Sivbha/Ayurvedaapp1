@@ -3,14 +3,12 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { basicDetailsSchema, BasicDetailsInput } from '@/lib/validation/basic-details';
-import { createClient } from '@/lib/supabase/client';
 import { useWizard } from '../layout';
 import { DIETARY_PREFERENCE_OPTIONS } from '@/lib/utils/constants';
 import { useState, useEffect } from 'react';
 
 export default function BasicDetailsPage() {
   const { assessmentId, setSaveStatus, handleNext } = useWizard();
-  const supabase = createClient();
   const [loaded, setLoaded] = useState(false);
 
   const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<BasicDetailsInput>({
@@ -22,45 +20,46 @@ export default function BasicDetailsPage() {
 
   useEffect(() => {
     if (!assessmentId || loaded) return;
-    supabase.from('assessments').select('*').eq('id', assessmentId).single().then(({ data }) => {
-      if (data) {
-        setValue('fullName', data.full_name || '');
-        setValue('email', data.email || '');
-        setValue('phone', data.phone || '');
-        setValue('age', data.age || undefined);
-        setValue('sex', data.sex || undefined);
-        setValue('country', data.country || '');
-        setValue('occupation', data.occupation || '');
-        setValue('dietaryPreferences', data.dietary_preferences || []);
-        setValue('consentGiven', data.consent_given || false);
-        setValue('disclaimerAccepted', data.disclaimer_accepted || false);
+    (async () => {
+      try {
+        const res = await fetch(`/api/assessments/${assessmentId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setValue('fullName', data.full_name || '');
+          setValue('email', data.email || '');
+          setValue('phone', data.phone || '');
+          setValue('age', data.age || undefined);
+          setValue('sex', data.sex || undefined);
+          setValue('country', data.country || '');
+          setValue('occupation', data.occupation || '');
+          setValue('dietaryPreferences', data.dietary_preferences || []);
+          setValue('consentGiven', data.consent_given || false);
+          setValue('disclaimerAccepted', data.disclaimer_accepted || false);
+        }
+      } catch (err) {
+        console.error('Basic details load error:', err);
       }
       setLoaded(true);
-    });
+    })();
   }, [assessmentId, loaded]);
 
-  const autoSave = async () => {
-    const data = watch();
-    setSaveStatus('saving');
-    await supabase.from('assessments').update({
-      full_name: data.fullName, email: data.email, phone: data.phone, age: data.age,
-      sex: data.sex, country: data.country, occupation: data.occupation,
-      dietary_preferences: data.dietaryPreferences,
-      consent_given: data.consentGiven, disclaimer_accepted: data.disclaimerAccepted,
-      consent_timestamp: data.consentGiven ? new Date().toISOString() : null,
-    }).eq('id', assessmentId);
-    setSaveStatus('saved');
+  const saveToServer = async (data: BasicDetailsInput) => {
+    await fetch(`/api/assessments/${assessmentId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        full_name: data.fullName, email: data.email, phone: data.phone, age: data.age,
+        sex: data.sex, country: data.country, occupation: data.occupation,
+        dietary_preferences: data.dietaryPreferences,
+        consent_given: data.consentGiven, disclaimer_accepted: data.disclaimerAccepted,
+        consent_timestamp: data.consentGiven ? new Date().toISOString() : null,
+      }),
+    });
   };
 
   const onSubmit = async (data: BasicDetailsInput) => {
     setSaveStatus('saving');
-    await supabase.from('assessments').update({
-      full_name: data.fullName, email: data.email, phone: data.phone, age: data.age,
-      sex: data.sex, country: data.country, occupation: data.occupation,
-      dietary_preferences: data.dietaryPreferences,
-      consent_given: data.consentGiven, disclaimer_accepted: data.disclaimerAccepted,
-      consent_timestamp: data.consentGiven ? new Date().toISOString() : null,
-    }).eq('id', assessmentId);
+    await saveToServer(data);
     setSaveStatus('saved');
     handleNext();
   };
@@ -95,7 +94,7 @@ export default function BasicDetailsPage() {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">Age *</label>
-          <input {...register('age')} type="number" className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-amber-500 focus:outline-none" />
+          <input {...register('age', { valueAsNumber: true })} type="number" className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-amber-500 focus:outline-none" />
           {errors.age && <p className="mt-1 text-xs text-red-600">{errors.age.message}</p>}
         </div>
         <div>

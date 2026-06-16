@@ -3,14 +3,12 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { safetySchema, SafetyInput } from '@/lib/validation/safety';
-import { createClient } from '@/lib/supabase/client';
 import { useWizard } from '../layout';
 import { RED_FLAG_LABELS } from '@/lib/utils/constants';
 import { useState, useEffect } from 'react';
 
 export default function SafetyPage() {
   const { assessmentId, setSaveStatus, handleNext } = useWizard();
-  const supabase = createClient();
   const [loaded, setLoaded] = useState(false);
   const [showRedFlagWarning, setShowRedFlagWarning] = useState(false);
 
@@ -29,17 +27,23 @@ export default function SafetyPage() {
 
   useEffect(() => {
     if (!assessmentId || loaded) return;
-    supabase.from('assessments').select('*').eq('id', assessmentId).single().then(({ data }) => {
-      if (data) {
-        setValue('isPregnant', data.is_pregnant || false);
-        setValue('isBreastfeeding', data.is_breastfeeding || false);
-        setMedItems(data.medications || []);
-        setCondItems(data.health_conditions || []);
-        setAllergyItems(data.allergies || []);
-        setValue('redFlags', data.red_flags || []);
+    (async () => {
+      try {
+        const res = await fetch(`/api/assessments/${assessmentId}`);
+        if (res.ok) {
+          const data = await res.json();
+          setValue('isPregnant', data.is_pregnant || false);
+          setValue('isBreastfeeding', data.is_breastfeeding || false);
+          setMedItems(data.medications || []);
+          setCondItems(data.health_conditions || []);
+          setAllergyItems(data.allergies || []);
+          setValue('redFlags', data.red_flags || []);
+        }
+      } catch (err) {
+        console.error('Safety data load error:', err);
       }
       setLoaded(true);
-    });
+    })();
   }, [assessmentId, loaded]);
 
   useEffect(() => {
@@ -57,15 +61,25 @@ export default function SafetyPage() {
   };
 
   const onSubmit = async (data: SafetyInput) => {
-    setSaveStatus('saving');
-    if (data.redFlags.length > 0) setShowRedFlagWarning(true);
-    await supabase.from('assessments').update({
-      is_pregnant: data.isPregnant, is_breastfeeding: data.isBreastfeeding,
-      medications: data.medications, health_conditions: data.healthConditions,
-      allergies: data.allergies, red_flags: data.redFlags,
-    }).eq('id', assessmentId);
-    setSaveStatus('saved');
-    handleNext();
+    try {
+      setSaveStatus('saving');
+      if (data.redFlags.length > 0) setShowRedFlagWarning(true);
+      const res = await fetch(`/api/assessments/${assessmentId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          is_pregnant: data.isPregnant, is_breastfeeding: data.isBreastfeeding,
+          medications: data.medications, health_conditions: data.healthConditions,
+          allergies: data.allergies, red_flags: data.redFlags,
+        }),
+      });
+      if (!res.ok) console.error('Save failed:', await res.text());
+      setSaveStatus('saved');
+      handleNext();
+    } catch (err) {
+      console.error('Submit error:', err);
+      setSaveStatus('saved');
+    }
   };
 
   return (

@@ -1,14 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import { useWizard } from '../../layout';
 import prakritiRules from '@/lib/rules/prakriti-weights.json';
 import { useRouter } from 'next/navigation';
+import { proxyFetch, proxyUpsert } from '@/lib/proxy-db';
 
 export default function PrakritiPhysicalPage() {
   const { assessmentId } = useWizard();
-  const supabase = createClient();
   const router = useRouter();
   const [answers, setAnswers] = useState<Record<string, string>>({});
 
@@ -16,15 +15,18 @@ export default function PrakritiPhysicalPage() {
 
   useEffect(() => {
     if (!assessmentId) return;
-    supabase.from('prakriti_answers').select('question_key, answer_value')
-      .eq('assessment_id', assessmentId).eq('category', 'physical')
-      .then(({ data }) => {
+    (async () => {
+      try {
+        const { data } = await proxyFetch('prakriti_answers', { assessment_id: assessmentId, category: 'physical' });
         if (data) {
           const loaded: Record<string, string> = {};
           data.forEach((a: any) => loaded[a.question_key] = a.answer_value);
           setAnswers(prev => ({ ...prev, ...loaded }));
         }
-      });
+      } catch (err) {
+        console.error('Load prakriti answers error:', err);
+      }
+    })();
   }, [assessmentId]);
 
   const handleSelect = async (questionKey: string, answerValue: string) => {
@@ -33,14 +35,18 @@ export default function PrakritiPhysicalPage() {
     const question = questions[questionKey as keyof typeof questions];
     const option = (question as any).options[answerValue];
     
-    await supabase.from('prakriti_answers').upsert({
-      assessment_id: assessmentId,
-      category: 'physical',
-      question_key: questionKey,
-      answer_value: answerValue,
-      answer_label: option?.label || '',
-      dosha_scores: option?.dosha || { vata: 0, pitta: 0, kapha: 0 },
-    }, { onConflict: 'assessment_id, question_key' });
+    try {
+      await proxyUpsert('prakriti_answers', {
+        assessment_id: assessmentId,
+        category: 'physical',
+        question_key: questionKey,
+        answer_value: answerValue,
+        answer_label: option?.label || '',
+        dosha_scores: option?.dosha || { vata: 0, pitta: 0, kapha: 0 },
+      }, 'assessment_id, question_key');
+    } catch (err) {
+      console.error('Save prakriti answer error:', err);
+    }
   };
 
   const allAnswered = Object.keys(questions).every(q => answers[q]);

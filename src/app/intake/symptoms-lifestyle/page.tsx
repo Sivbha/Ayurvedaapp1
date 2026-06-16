@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { proxyFetch, proxyUpsert } from '@/lib/proxy-db';
 import { useWizard } from '../layout';
 import { useRouter } from 'next/navigation';
 
@@ -41,21 +41,22 @@ const SYMPTOM_LABELS: Record<string, string> = {
 
 export default function SymptomsLifestylePage() {
   const { assessmentId } = useWizard();
-  const supabase = createClient();
   const router = useRouter();
   const [expandedCategory, setExpandedCategory] = useState('digestion');
   const [entries, setEntries] = useState<Record<string, { symptoms: string[]; severity: string; notes: string }>>({});
 
   useEffect(() => {
     if (!assessmentId) return;
-    supabase.from('symptom_entries').select('*').eq('assessment_id', assessmentId)
-      .then(({ data }) => {
+    (async () => {
+      try {
+        const { data } = await proxyFetch('symptom_entries', { assessment_id: assessmentId });
         if (data) {
           const loaded: Record<string, any> = {};
           data.forEach((e: any) => { loaded[e.category] = { symptoms: e.symptoms || [], severity: e.severity || 'mild', notes: e.notes || '' }; });
           setEntries(prev => ({ ...prev, ...loaded }));
         }
-      });
+      } catch (err) { console.error(err); }
+    })();
   }, [assessmentId]);
 
   const toggleSymptom = async (category: string, symptom: string) => {
@@ -63,21 +64,25 @@ export default function SymptomsLifestylePage() {
     const updated = current.includes(symptom) ? current.filter((s: string) => s !== symptom) : [...current, symptom];
     const newEntry = { ...entries[category], symptoms: updated };
     setEntries(prev => ({ ...prev, [category]: newEntry }));
-    await supabase.from('symptom_entries').upsert({
-      assessment_id: assessmentId, category, symptoms: updated,
-      severity: newEntry.severity || 'mild', notes: newEntry.notes || '',
-    }, { onConflict: 'assessment_id, category' });
+    try {
+      await proxyUpsert('symptom_entries', {
+        assessment_id: assessmentId, category, symptoms: updated,
+        severity: newEntry.severity || 'mild', notes: newEntry.notes || '',
+      }, 'assessment_id, category');
+    } catch (err) { console.error(err); }
   };
 
   const updateField = async (category: string, field: string, value: string) => {
     const newEntry = { ...entries[category], [field]: value };
     setEntries(prev => ({ ...prev, [category]: newEntry }));
-    await supabase.from('symptom_entries').upsert({
-      assessment_id: assessmentId, category,
-      symptoms: newEntry.symptoms || [],
-      severity: newEntry.severity || 'mild',
-      notes: field === 'notes' ? value : newEntry.notes || '',
-    }, { onConflict: 'assessment_id, category' });
+    try {
+      await proxyUpsert('symptom_entries', {
+        assessment_id: assessmentId, category,
+        symptoms: newEntry.symptoms || [],
+        severity: newEntry.severity || 'mild',
+        notes: field === 'notes' ? value : newEntry.notes || '',
+      }, 'assessment_id, category');
+    } catch (err) { console.error(err); }
   };
 
   return (

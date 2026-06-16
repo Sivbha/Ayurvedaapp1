@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { STEP_LABELS } from '@/lib/utils/constants';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 const STEP_PATHS = [
   '/intake/basic-details',
@@ -33,31 +34,26 @@ export default function IntakeLayout({ children }: { children: React.ReactNode }
   }, []);
 
   const initAssessment = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { router.push('/login'); return; }
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) { router.push('/login'); return; }
 
-    const { data: existing, error } = await supabase
-      .from('assessments')
-      .select('id, current_step')
-      .eq('client_id', user.id)
-      .eq('status', 'draft')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (!error && existing) {
-      setAssessmentId(existing.id);
-      setCurrentStep(existing.current_step || 1);
-      if (!STEP_PATHS.some(p => pathname.startsWith(p))) {
-        router.push(STEP_PATHS[(existing.current_step || 1) - 1] || STEP_PATHS[0]);
+      const res = await fetch('/api/assessments/init', { method: 'POST' });
+      if (!res.ok) {
+        const err = await res.json();
+        console.error('initAssessment failed:', err);
+        router.push('/login');
+        return;
       }
-    } else {
-      const { data: created } = await supabase
-        .from('assessments')
-        .insert({ client_id: user.id })
-        .select('id')
-        .single();
-      if (created) setAssessmentId(created.id);
+      const data = await res.json();
+      setAssessmentId(data.assessmentId);
+      if (data.currentStep) setCurrentStep(data.currentStep);
+      if (!STEP_PATHS.some(p => pathname.startsWith(p))) {
+        router.push(STEP_PATHS[(data.currentStep || 1) - 1] || STEP_PATHS[0]);
+      }
+    } catch (err) {
+      console.error('initAssessment error:', err);
+      router.push('/login');
     }
   };
 
@@ -109,7 +105,9 @@ export default function IntakeLayout({ children }: { children: React.ReactNode }
         <div className="rounded-2xl bg-white p-6 shadow-md">
           {assessmentId ? (
             <WizardContext.Provider value={{ assessmentId, saveStatus, setSaveStatus, handleNext, handlePrev, currentStep }}>
-              {children}
+              <ErrorBoundary>
+                {children}
+              </ErrorBoundary>
             </WizardContext.Provider>
           ) : (
             <div className="flex items-center justify-center py-12">

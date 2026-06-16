@@ -1,22 +1,22 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { proxyFetch } from '@/lib/proxy-db';
 import { useWizard } from '../../layout';
 import { useRouter } from 'next/navigation';
 import vikritiRules from '@/lib/rules/vikriti-weights.json';
 
 export default function VikritiReviewPage() {
   const { assessmentId } = useWizard();
-  const supabase = createClient();
   const router = useRouter();
   const [answersByCategory, setAnswersByCategory] = useState<Record<string, any[]>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!assessmentId) return;
-    supabase.from('vikriti_answers').select('*').eq('assessment_id', assessmentId)
-      .then(({ data }) => {
+    (async () => {
+      try {
+        const { data } = await proxyFetch('vikriti_answers', { assessment_id: assessmentId });
         if (data) {
           const grouped: Record<string, any[]> = {};
           data.forEach((a: any) => {
@@ -26,7 +26,8 @@ export default function VikritiReviewPage() {
           setAnswersByCategory(grouped);
         }
         setLoading(false);
-      });
+      } catch (err) { console.error(err); }
+    })();
   }, [assessmentId]);
 
   const categoryLabels: Record<string, string> = { digestive: 'Digestive', energy_mood: 'Energy & Mood', physical: 'Physical', reproductive: 'Reproductive' };

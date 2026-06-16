@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/lib/supabase/client';
+import { proxyFetch, proxyUpdate } from '@/lib/proxy-db';
 import { useWizard } from '../layout';
 import { useRouter } from 'next/navigation';
 
 export default function ReviewSubmitPage() {
   const { assessmentId, setSaveStatus } = useWizard();
-  const supabase = createClient();
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [assessment, setAssessment] = useState<any>(null);
@@ -15,21 +14,30 @@ export default function ReviewSubmitPage() {
 
   useEffect(() => {
     if (!assessmentId) return;
-    supabase.from('assessments').select('*').eq('id', assessmentId).single()
-      .then(({ data }) => setAssessment(data));
-
-    supabase.from('scoring_results').select('id').eq('assessment_id', assessmentId).single()
-      .then(({ data }) => setScoringReady(!!data));
+    (async () => {
+      try {
+        const { data: assessData } = await proxyFetch('assessments', { id: assessmentId });
+        setAssessment(assessData?.[0] || null);
+      } catch (err) { console.error(err); }
+    })();
+    (async () => {
+      try {
+        const { data: scoreData } = await proxyFetch('scoring_results', { assessment_id: assessmentId }, { select: 'id' });
+        setScoringReady(!!scoreData?.[0]);
+      } catch (err) { console.error(err); }
+    })();
   }, [assessmentId]);
 
   const handleSubmit = async () => {
     setSubmitting(true);
     setSaveStatus('saving');
 
-    await supabase.from('assessments').update({
-      status: 'submitted',
-      submitted_at: new Date().toISOString(),
-    }).eq('id', assessmentId);
+    try {
+      await proxyUpdate('assessments', {
+        status: 'submitted',
+        submitted_at: new Date().toISOString(),
+      }, { id: assessmentId });
+    } catch (err) { console.error(err); }
 
     await fetch(`/api/assessments/${assessmentId}/score`, { method: 'POST' });
 
