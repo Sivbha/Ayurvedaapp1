@@ -1,9 +1,0 @@
-{
-  "git": {
-    "deploymentEnabled": {
-      "master": true
-    }
-  },
-  "buildCommand": "next build --no-lint",
-  "installCommand": "npm install"
-}
