@@ -5,6 +5,7 @@ import { calculateVikriti } from '@/lib/scoring/vikriti';
 import { assessAgni } from '@/lib/scoring/agni';
 import { assessAma } from '@/lib/scoring/ama';
 import { analyzeFoodPattern } from '@/lib/scoring/food-pattern';
+import { notifyPractitionerNewSubmission } from '@/lib/email';
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -66,6 +67,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   }, { onConflict: 'assessment_id' });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  await supabase.from('assessments').update({ status: 'submitted', submitted_at: new Date().toISOString() }).eq('id', id);
+
+  notifyPractitionerNewSubmission(id).catch(() => {});
 
   return NextResponse.json({
     prakriti: prakritiResult, vikriti: vikritiResult,

@@ -20,10 +20,20 @@ export default function ClientsPage() {
   const [clients, setClients] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
-    supabase.from('assessments').select('*').order('created_at', { ascending: false })
-      .then(({ data }) => setClients(data || []));
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      supabase.from('profiles').select('role').eq('id', user.id).single().then(({ data: profile }) => {
+        setUserRole(profile?.role || '');
+        let query = supabase.from('assessments').select('*');
+        if (profile?.role === 'practitioner') {
+          query = query.eq('practitioner_id', user.id);
+        }
+        query.order('created_at', { ascending: false }).then(({ data }) => setClients(data || []));
+      });
+    });
   }, []);
 
   const filtered = clients.filter(c => {
