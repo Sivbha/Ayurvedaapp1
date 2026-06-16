@@ -27,8 +27,8 @@ export default function BasicDetailsPage() {
         setValue('fullName', data.full_name || '');
         setValue('email', data.email || '');
         setValue('phone', data.phone || '');
-        setValue('age', data.age || 0);
-        setValue('sex', data.sex || '');
+        setValue('age', data.age || undefined);
+        setValue('sex', data.sex || undefined);
         setValue('country', data.country || '');
         setValue('occupation', data.occupation || '');
         setValue('dietaryPreferences', data.dietary_preferences || []);
@@ -39,7 +39,8 @@ export default function BasicDetailsPage() {
     });
   }, [assessmentId, loaded]);
 
-  const autoSave = async (data: BasicDetailsInput) => {
+  const autoSave = async () => {
+    const data = watch();
     setSaveStatus('saving');
     await supabase.from('assessments').update({
       full_name: data.fullName, email: data.email, phone: data.phone, age: data.age,
@@ -52,7 +53,15 @@ export default function BasicDetailsPage() {
   };
 
   const onSubmit = async (data: BasicDetailsInput) => {
-    await autoSave(data);
+    setSaveStatus('saving');
+    await supabase.from('assessments').update({
+      full_name: data.fullName, email: data.email, phone: data.phone, age: data.age,
+      sex: data.sex, country: data.country, occupation: data.occupation,
+      dietary_preferences: data.dietaryPreferences,
+      consent_given: data.consentGiven, disclaimer_accepted: data.disclaimerAccepted,
+      consent_timestamp: data.consentGiven ? new Date().toISOString() : null,
+    }).eq('id', assessmentId);
+    setSaveStatus('saved');
     handleNext();
   };
 
@@ -63,7 +72,7 @@ export default function BasicDetailsPage() {
   };
 
   return (
-    <form onChange={handleSubmit(autoSave)} onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-gray-900">Basic Details</h2>
         <p className="mt-1 text-sm text-gray-500">Let us get to know you</p>

@@ -52,29 +52,24 @@ export default function SafetyPage() {
     setValue('allergies', allergyItems);
   }, [allergyItems]);
 
-  const autoSave = async (data: SafetyInput) => {
+  const addTag = (input: string, items: string[], setter: (v: string[]) => void) => {
+    if (input.trim() && !items.includes(input.trim())) setter([...items, input.trim()]);
+  };
+
+  const onSubmit = async (data: SafetyInput) => {
     setSaveStatus('saving');
-    const hasRedFlags = data.redFlags.length > 0;
-    if (hasRedFlags) setShowRedFlagWarning(true);
+    if (data.redFlags.length > 0) setShowRedFlagWarning(true);
     await supabase.from('assessments').update({
       is_pregnant: data.isPregnant, is_breastfeeding: data.isBreastfeeding,
       medications: data.medications, health_conditions: data.healthConditions,
       allergies: data.allergies, red_flags: data.redFlags,
     }).eq('id', assessmentId);
     setSaveStatus('saved');
-  };
-
-  const onSubmit = async (data: SafetyInput) => {
-    await autoSave(data);
     handleNext();
   };
 
-  const addTag = (input: string, items: string[], setter: (v: string[]) => void) => {
-    if (input.trim() && !items.includes(input.trim())) setter([...items, input.trim()]);
-  };
-
   return (
-    <form onChange={handleSubmit(autoSave)} onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-gray-900">Health & Safety Information</h2>
         <p className="mt-1 text-sm text-gray-500">This helps us provide appropriate recommendations</p>

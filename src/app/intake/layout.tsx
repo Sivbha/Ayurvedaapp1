@@ -36,19 +36,18 @@ export default function IntakeLayout({ children }: { children: React.ReactNode }
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push('/login'); return; }
 
-    const { data: existing } = await supabase
+    const { data: existing, error } = await supabase
       .from('assessments')
       .select('id, current_step')
       .eq('client_id', user.id)
       .eq('status', 'draft')
       .order('created_at', { ascending: false })
       .limit(1)
-      .single();
+      .maybeSingle();
 
-    if (existing) {
+    if (!error && existing) {
       setAssessmentId(existing.id);
       setCurrentStep(existing.current_step || 1);
-      // Redirect to current step if on wrong step
       if (!STEP_PATHS.some(p => pathname.startsWith(p))) {
         router.push(STEP_PATHS[(existing.current_step || 1) - 1] || STEP_PATHS[0]);
       }
