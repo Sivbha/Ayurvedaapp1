@@ -1,0 +1,9 @@
+{
+  "answers": [
+    { "questionKey": "acidity_burning", "severity": 3, "category": "digestive", "doshaImpact": { "vata": 0, "pitta": 3, "kapha": 0 } },
+    { "questionKey": "irritability", "severity": 2, "category": "energy_mood", "doshaImpact": { "vata": 0, "pitta": 3, "kapha": 0 } },
+    { "questionKey": "skin_issues", "severity": 2, "category": "physical", "doshaImpact": { "vata": 2, "pitta": 2, "kapha": 1 } },
+    { "questionKey": "sleep_disturbance", "severity": 2, "category": "energy_mood", "doshaImpact": { "vata": 2, "pitta": 2, "kapha": 1 } }
+  ],
+  "expectedResult": { "dominant": "pitta", "severity": "moderate" }
+}

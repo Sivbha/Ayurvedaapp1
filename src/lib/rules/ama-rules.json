@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "weights": {
+    "symptomScore": 0.3,
+    "foodScore": 0.4,
+    "vikritiScore": 0.3
+  },
+  "thresholds": {
+    "low": 20,
+    "moderate": 40,
+    "high": 99
+  },
+  "amaSymptoms": ["fatigue", "brain_fog", "body_aches", "congestion", "heavy_feeling", "coated_tongue", "bad_breath", "indigestion"],
+  "foodIndicators": {
+    "leftovers": 5,
+    "fried_foods": 3,
+    "eating_out": 3,
+    "sugar_sweets": 2,
+    "dairy": 2
+  },
+  "amaLevelDescriptions": {
+    "low": "Minimal Ama present. Your digestive fire is functioning well. Continue with supportive dietary habits.",
+    "moderate": "Moderate Ama detected. Consider a light diet with warm, cooked foods and digestive spices.",
+    "high": "Significant Ama accumulation. A gentle detox routine with kitchari, warm water, and rest is recommended."
+  },
+  "amaRecommendations": {
+    "low": ["Continue balanced diet", "Stay hydrated with warm water", "Regular exercise"],
+    "moderate": ["Light diet for 3-5 days", "Warm water throughout the day", "Ginger and turmeric tea", "Avoid leftovers and processed foods"],
+    "high": ["Consider a 3-day kitchari cleanse", "Warm water only (no cold drinks)", "Triphala at bedtime", "Rest and gentle movement", "Consult a practitioner for personalized plan"]
+  }
+}

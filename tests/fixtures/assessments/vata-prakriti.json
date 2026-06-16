@@ -1,0 +1,26 @@
+{
+  "prakriti": {
+    "physical": [
+      { "questionKey": "body_frame", "answerValue": "thin_light", "doshaScores": { "vata": 3, "pitta": 0, "kapha": 0 } },
+      { "questionKey": "weight_tendency", "answerValue": "difficult_gain", "doshaScores": { "vata": 3, "pitta": 1, "kapha": 0 } },
+      { "questionKey": "skin", "answerValue": "dry_rough", "doshaScores": { "vata": 3, "pitta": 0, "kapha": 0 } },
+      { "questionKey": "hair", "answerValue": "dry_frizzy", "doshaScores": { "vata": 3, "pitta": 0, "kapha": 0 } }
+    ],
+    "metabolic": [
+      { "questionKey": "appetite", "answerValue": "variable", "doshaScores": { "vata": 3, "pitta": 0, "kapha": 0 } },
+      { "questionKey": "digestion", "answerValue": "irregular_gas", "doshaScores": { "vata": 3, "pitta": 0, "kapha": 0 } },
+      { "questionKey": "sleep", "answerValue": "light_interrupted", "doshaScores": { "vata": 3, "pitta": 1, "kapha": 0 } },
+      { "questionKey": "energy_style", "answerValue": "bursts_crash", "doshaScores": { "vata": 3, "pitta": 1, "kapha": 0 } }
+    ],
+    "behavioral": [
+      { "questionKey": "mental_pace", "answerValue": "quick_racing", "doshaScores": { "vata": 3, "pitta": 1, "kapha": 0 } },
+      { "questionKey": "memory", "answerValue": "quick_learn_forget", "doshaScores": { "vata": 3, "pitta": 1, "kapha": 0 } },
+      { "questionKey": "stress_response", "answerValue": "anxiety_worry", "doshaScores": { "vata": 3, "pitta": 1, "kapha": 0 } }
+    ],
+    "psychological": [
+      { "questionKey": "temperature_preference", "answerValue": "cold_aversion", "doshaScores": { "vata": 2, "pitta": 0, "kapha": 1 } },
+      { "questionKey": "emotional_tendencies", "answerValue": "fear_anxiety", "doshaScores": { "vata": 3, "pitta": 0, "kapha": 0 } }
+    ]
+  },
+  "expectedResult": { "dominant": "vata" }
+}

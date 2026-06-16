@@ -1,0 +1,34 @@
+{
+  "version": "1.0",
+  "weights": {
+    "vikritiDigestiveImpact": 0.4,
+    "foodPatternImpact": 0.3,
+    "symptomImpact": 0.3
+  },
+  "thresholds": {
+    "samaMax": 30,
+    "vishamaMin": 25,
+    "tikshnaMin": 25,
+    "mandaMin": 25
+  },
+  "symptomScores": {
+    "bloating_gas": { "vata": 5, "pitta": 0, "kapha": 2 },
+    "acidity_heartburn": { "vata": 0, "pitta": 5, "kapha": 0 },
+    "heavy_after_meals": { "vata": 0, "pitta": 0, "kapha": 5 },
+    "irregular_appetite": { "vata": 5, "pitta": 0, "kapha": 0 },
+    "slow_digestion": { "vata": 0, "pitta": 0, "kapha": 5 },
+    "burping": { "vata": 2, "pitta": 3, "kapha": 1 }
+  },
+  "agniDescriptions": {
+    "sama": "Balanced Agni — digestion is strong and consistent. Maintain current dietary habits with seasonal variations.",
+    "vishama": "Irregular Agni (Vata) — digestion fluctuates. Favor warm, cooked, regular meals. Avoid raw, cold, and erratic eating.",
+    "tikshna": "Intense Agni (Pitta) — digestion is sharp and fast. Avoid spicy, fried, sour foods. Cool, sweet, moderate meals are best.",
+    "manda": "Slow Agni (Kapha) — digestion is sluggish. Favor light, warm, dry foods. Avoid heavy, oily, cold, and sweet foods."
+  },
+  "agniRecommendations": {
+    "sama": ["Maintain regular meal times", "Continue balanced diet with all six tastes"],
+    "vishama": ["Eat at consistent times daily", "Warm, well-cooked meals", "Ginger, cumin, fennel tea", "Avoid raw foods and cold drinks"],
+    "tikshna": ["Avoid spicy, sour, salty foods", "Sweet, bitter, astringent tastes", "Coconut water, aloe vera", "Regular, not skipped meals"],
+    "manda": ["Light breakfast, skip if not hungry", "Warm water with honey and lemon", "Ginger, black pepper, turmeric", "Avoid heavy, fried, cold foods"]
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "byDosha": {
+    "vata": {
+      "name": "Calming Breath",
+      "description": "Slow, deep breathing to calm Vata",
+      "techniques": [
+        { "name": "Deep Belly Breathing", "sanskritName": "Dirga Pranayama", "instructions": ["Sit comfortably with spine straight", "Place hands on belly", "Inhale slowly through nose, feeling belly rise", "Exhale slowly through nose", "Repeat for 5-10 minutes"], "benefits": ["Calms nervous system", "Reduces anxiety", "Grounds energy"], "contraindications": [] },
+        { "name": "Alternate Nostril Breathing", "sanskritName": "Nadi Shodhana", "instructions": ["Sit comfortably", "Close right nostril with thumb", "Inhale left nostril", "Close left nostril with ring finger", "Exhale right nostril", "Inhale right nostril", "Close right nostril", "Exhale left nostril", "Repeat cycle for 5 minutes"], "benefits": ["Balances hemispheres", "Calms mind", "Reduces stress"], "contraindications": ["Avoid if feeling congested"] }
+      ],
+      "durationMinutes": 10,
+      "frequencyPerDay": 2
+    },
+    "pitta": {
+      "name": "Cooling Breath",
+      "description": "Cooling practices to calm Pitta",
+      "techniques": [
+        { "name": "Cooling Breath", "sanskritName": "Sitali Pranayama", "instructions": ["Sit comfortably", "Roll tongue into tube", "Inhale through rolled tongue", "Close mouth and exhale through nose", "Repeat for 5-10 minutes"], "benefits": ["Cools body", "Calms anger", "Reduces inflammation"], "contraindications": ["Avoid in cold weather"] },
+        { "name": "Moon Breathing", "sanskritName": "Chandra Bhedana", "instructions": ["Sit comfortably", "Close right nostril", "Inhale left nostril", "Close left nostril", "Exhale right nostril", "Repeat 5-10 minutes"], "benefits": ["Cooling", "Calming", "Reduces heat"], "contraindications": [] }
+      ],
+      "durationMinutes": 10,
+      "frequencyPerDay": 2
+    },
+    "kapha": {
+      "name": "Energizing Breath",
+      "description": "Stimulating practices to balance Kapha",
+      "techniques": [
+        { "name": "Breath of Fire", "sanskritName": "Kapalbhati", "instructions": ["Sit comfortably", "Take deep inhale", "Exhale forcefully through nose", "Allow passive inhale", "Repeat 30-50 breaths"], "benefits": ["Energizes", "Clears sinuses", "Stimulates digestion"], "contraindications": ["Avoid if pregnant", "Avoid with high blood pressure"] },
+        { "name": "Sun Breathing", "sanskritName": "Surya Bhedana", "instructions": ["Sit comfortably", "Close left nostril", "Inhale right nostril deeply", "Close right nostril", "Exhale left nostril", "Repeat 5-10 minutes"], "benefits": ["Energizes", "Warms body", "Increases focus"], "contraindications": ["Avoid if overheating"] }
+      ],
+      "durationMinutes": 10,
+      "frequencyPerDay": 2
+    }
+  }
+}

@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-heading: var(--font-heading), system-ui, sans-serif;
+  --color-dosha-vata: #6d28d9;
+  --color-dosha-pitta: #dc2626;
+  --color-dosha-kapha: #059669;
+  --color-ayurveda-50: #fdf8f3;
+  --color-ayurveda-100: #faefdc;
+  --color-ayurveda-200: #f5dfb9;
+  --color-ayurveda-300: #ebc987;
+  --color-ayurveda-400: #e0ac56;
+  --color-ayurveda-500: #d48f2d;
+  --color-ayurveda-600: #c4741f;
+  --color-ayurveda-700: #9d5a1a;
+  --color-ayurveda-800: #7e4a1a;
+  --color-ayurveda-900: #663d19;
+  --color-ayurveda-950: #371d0a;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

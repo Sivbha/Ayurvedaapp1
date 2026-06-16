@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "templates": {
+    "vata_balancing": {
+      "description": "Warm, moist, grounding meals to balance Vata",
+      "principles": ["Warm cooked foods", "Healthy oils and ghee", "Sweet, sour, salty tastes", "Regular meal times"],
+      "sampleDay": {
+        "breakfast": { "name": "Warm oatmeal with ghee", "description": "Cooked oats with cinnamon, ghee, and dates", "ingredients": ["oats", "ghee", "cinnamon", "dates", "almond milk"] },
+        "lunch": { "name": "Kitchari", "description": "Rice and mung bean stew with warming spices", "ingredients": ["basmati rice", "mung dal", "ghee", "ginger", "cumin", "turmeric"] },
+        "dinner": { "name": "Roasted vegetable soup", "description": "Warm soup with root vegetables", "ingredients": ["carrots", "sweet potato", "zucchini", "ginger", "coconut milk"] },
+        "snacks": [{ "name": "Stewed apples", "description": "Cooked apples with cinnamon", "ingredients": ["apple", "cinnamon", "honey"] }]
+      }
+    },
+    "pitta_balancing": {
+      "description": "Cool, calming, moderate meals to balance Pitta",
+      "principles": ["Cool or warm (not hot) foods", "Sweet, bitter, astringent tastes", "Fresh vegetables", "Regular meal times"],
+      "sampleDay": {
+        "breakfast": { "name": "Coconut rice pudding", "description": "Cooling rice pudding with cardamom", "ingredients": ["rice", "coconut milk", "cardamom", "rose water"] },
+        "lunch": { "name": "Quinoa salad with mint", "description": "Cool quinoa with cucumber and mint", "ingredients": ["quinoa", "cucumber", "mint", "coconut", "lime"] },
+        "dinner": { "name": "Mung dal soup", "description": "Light dal soup with cilantro", "ingredients": ["mung dal", "coconut", "cilantro", "cumin", "fennel"] },
+        "snacks": [{ "name": "Fresh fruit", "description": "Sweet seasonal fruits", "ingredients": ["melon", "pear", "grapes"] }]
+      }
+    },
+    "kapha_balancing": {
+      "description": "Light, warm, dry meals to balance Kapha",
+      "principles": ["Light cooked foods", "Pungent, bitter, astringent tastes", "Minimal oil and salt", "No snacking between meals"],
+      "sampleDay": {
+        "breakfast": { "name": "Spiced apple compote", "description": "Cooked apples with ginger and black pepper", "ingredients": ["apple", "ginger", "black pepper", "honey"] },
+        "lunch": { "name": "Lentil vegetable stew", "description": "Light lentil stew with greens", "ingredients": ["red lentils", "spinach", "turmeric", "black pepper", "mustard seeds"] },
+        "dinner": { "name": "Steamed vegetables with quinoa", "description": "Light steamed vegetables", "ingredients": ["broccoli", "cauliflower", "quinoa", "lemon", "ginger"] },
+        "snacks": [{ "name": "Ginger tea", "description": "Fresh ginger steeped in hot water", "ingredients": ["ginger", "lemon", "honey"] }]
+      }
+    }
+  }
+}

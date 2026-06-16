@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "thresholds": { "dominant": 45, "irregularMeals": 3, "lateDinners": 4, "heavyMeals": 4 },
+  "foodCategories": {
+    "caffeine": { "vata": 2, "pitta": 1, "kapha": 0 },
+    "sugar_sweets": { "vata": 1, "pitta": 1, "kapha": 3 },
+    "fried_foods": { "vata": 1, "pitta": 2, "kapha": 2 },
+    "spicy_foods": { "vata": 1, "pitta": 3, "kapha": 1 },
+    "fermented_foods": { "vata": 1, "pitta": 2, "kapha": 1 },
+    "dairy": { "vata": 0, "pitta": 1, "kapha": 2 },
+    "gluten_wheat": { "vata": 1, "pitta": 0, "kapha": 2 },
+    "beans_legumes": { "vata": 2, "pitta": 0, "kapha": 1 },
+    "raw_salads": { "vata": 2, "pitta": 1, "kapha": 0 },
+    "leftovers": { "vata": 1, "pitta": 1, "kapha": 2 },
+    "eating_out": { "vata": 1, "pitta": 1, "kapha": 1 }
+  },
+  "behavioralFactors": {
+    "skipped_meals": { "vata": 3, "pitta": 1, "kapha": 0 },
+    "late_dinner": { "vata": 1, "pitta": 2, "kapha": 2 },
+    "eating_fast": { "vata": 2, "pitta": 1, "kapha": 1 },
+    "overeating": { "vata": 1, "pitta": 1, "kapha": 3 },
+    "irregular_meals": { "vata": 3, "pitta": 1, "kapha": 0 }
+  }
+}

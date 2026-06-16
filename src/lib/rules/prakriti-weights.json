@@ -1,0 +1,81 @@
+{
+  "version": "1.0",
+  "categoryWeights": { "physical": 1.0, "metabolic": 1.2, "behavioral": 1.0, "psychological": 0.8 },
+  "thresholds": { "dominantSingle": 50, "dualTypeGap": 15, "minimumConfidence": 0.35 },
+  "questions": {
+    "physical": {
+      "body_frame": { "label": "Body frame", "type": "single", "options": {
+        "thin_light": { "label": "Thin, light, narrow build", "dosha": { "vata": 3, "pitta": 0, "kapha": 0 } },
+        "medium_muscular": { "label": "Medium, muscular, well-proportioned", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "large_heavy": { "label": "Large, heavy, broad build", "dosha": { "vata": 0, "pitta": 0, "kapha": 3 } }
+      } },
+      "weight_tendency": { "label": "Weight tendency", "type": "single", "options": {
+        "difficult_gain": { "label": "Difficult to gain, easy to lose", "dosha": { "vata": 3, "pitta": 1, "kapha": 0 } },
+        "moderate_fluctuates": { "label": "Moderate, fluctuates with effort", "dosha": { "vata": 1, "pitta": 2, "kapha": 1 } },
+        "easy_gain_difficult_lose": { "label": "Easy to gain, difficult to lose", "dosha": { "vata": 0, "pitta": 1, "kapha": 3 } }
+      } },
+      "skin": { "label": "Skin quality", "type": "single", "options": {
+        "dry_rough": { "label": "Dry, rough, cool, thin", "dosha": { "vata": 3, "pitta": 0, "kapha": 0 } },
+        "warm_oily": { "label": "Warm, oily, sensitive, freckles", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "thick_cool_oily": { "label": "Thick, cool, oily, smooth", "dosha": { "vata": 0, "pitta": 0, "kapha": 3 } }
+      } },
+      "hair": { "label": "Hair type", "type": "single", "options": {
+        "dry_frizzy": { "label": "Dry, frizzy, curly, sparse", "dosha": { "vata": 3, "pitta": 0, "kapha": 0 } },
+        "fine_straight": { "label": "Fine, straight, thinning, early gray", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "thick_wavy": { "label": "Thick, wavy, oily, lustrous", "dosha": { "vata": 0, "pitta": 0, "kapha": 3 } }
+      } }
+    },
+    "metabolic": {
+      "appetite": { "label": "Appetite pattern", "type": "single", "options": {
+        "variable": { "label": "Variable, irregular, forget to eat", "dosha": { "vata": 3, "pitta": 0, "kapha": 0 } },
+        "strong_sharp": { "label": "Strong, sharp, irritable if meal late", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "steady_moderate": { "label": "Steady, moderate, can skip easily", "dosha": { "vata": 0, "pitta": 0, "kapha": 3 } }
+      } },
+      "digestion": { "label": "Digestion type", "type": "single", "options": {
+        "irregular_gas": { "label": "Irregular, gas, bloating, constipation", "dosha": { "vata": 3, "pitta": 0, "kapha": 0 } },
+        "fast_burning": { "label": "Fast, burning, loose stools, acidity", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "slow_heavy": { "label": "Slow, heavy, sluggish, mucus", "dosha": { "vata": 0, "pitta": 0, "kapha": 3 } }
+      } },
+      "sleep": { "label": "Sleep pattern", "type": "single", "options": {
+        "light_interrupted": { "label": "Light, interrupted, vivid dreams", "dosha": { "vata": 3, "pitta": 1, "kapha": 0 } },
+        "moderate_intense": { "label": "Moderate, intense dreams, wake hot", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "deep_heavy": { "label": "Deep, heavy, hard to wake, oversleep", "dosha": { "vata": 0, "pitta": 0, "kapha": 3 } }
+      } },
+      "energy_style": { "label": "Energy style", "type": "single", "options": {
+        "bursts_crash": { "label": "Bursts of energy, then crash", "dosha": { "vata": 3, "pitta": 1, "kapha": 0 } },
+        "steady_intense": { "label": "Steady, intense, driven", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "slow_sustained": { "label": "Slow to start, sustained, enduring", "dosha": { "vata": 0, "pitta": 0, "kapha": 3 } }
+      } }
+    },
+    "behavioral": {
+      "mental_pace": { "label": "Mental pace", "type": "single", "options": {
+        "quick_racing": { "label": "Quick, racing thoughts, multitask", "dosha": { "vata": 3, "pitta": 1, "kapha": 0 } },
+        "sharp_focused": { "label": "Sharp, focused, analytical", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "slow_deliberate": { "label": "Slow, deliberate, methodical", "dosha": { "vata": 0, "pitta": 0, "kapha": 3 } }
+      } },
+      "memory": { "label": "Memory style", "type": "single", "options": {
+        "quick_learn_forget": { "label": "Quick to learn, quick to forget", "dosha": { "vata": 3, "pitta": 1, "kapha": 0 } },
+        "sharp_retentive": { "label": "Sharp, retentive, detailed", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "slow_learn_retain": { "label": "Slow to learn, but retain well", "dosha": { "vata": 0, "pitta": 0, "kapha": 3 } }
+      } },
+      "stress_response": { "label": "Stress response", "type": "single", "options": {
+        "anxiety_worry": { "label": "Anxiety, worry, feeling overwhelmed", "dosha": { "vata": 3, "pitta": 1, "kapha": 0 } },
+        "irritability_anger": { "label": "Irritability, anger, criticism", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "withdrawal_lethargy": { "label": "Withdrawal, procrastination, avoidance", "dosha": { "vata": 0, "pitta": 0, "kapha": 3 } }
+      } }
+    },
+    "psychological": {
+      "temperature_preference": { "label": "Temperature preference", "type": "single", "options": {
+        "cold_aversion": { "label": "Prefer warmth, dislike cold", "dosha": { "vata": 2, "pitta": 0, "kapha": 1 } },
+        "heat_aversion": { "label": "Prefer cool, dislike heat", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "comfortable_most": { "label": "Comfortable in most temperatures", "dosha": { "vata": 1, "pitta": 1, "kapha": 2 } }
+      } },
+      "emotional_tendencies": { "label": "Emotional tendencies", "type": "multi", "options": {
+        "fear_anxiety": { "label": "Fear, anxiety, insecurity", "dosha": { "vata": 3, "pitta": 0, "kapha": 0 } },
+        "anger_frustration": { "label": "Anger, frustration, jealousy", "dosha": { "vata": 0, "pitta": 3, "kapha": 0 } },
+        "attachment_greed": { "label": "Attachment, greed, possessiveness", "dosha": { "vata": 0, "pitta": 0, "kapha": 3 } },
+        "calm_compassion": { "label": "Calm, compassion, forgiveness", "dosha": { "vata": 0, "pitta": 1, "kapha": 2 } }
+      } }
+    }
+  }
+}

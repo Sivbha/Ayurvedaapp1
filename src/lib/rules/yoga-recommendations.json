@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "byDosha": {
+    "vata": {
+      "poses": [
+        { "name": "Mountain Pose", "sanskritName": "Tadasana", "description": "Standing grounding pose", "benefits": ["Grounding", "Stability", "Balance"], "modifications": [], "doshaEffect": "vata" },
+        { "name": "Child's Pose", "sanskritName": "Balasana", "description": "Resting pose on knees", "benefits": ["Calming", "Restorative", "Grounding"], "modifications": [], "doshaEffect": "vata" },
+        { "name": "Corpse Pose", "sanskritName": "Savasana", "description": "Final relaxation pose", "benefits": ["Deep rest", "Integration"], "modifications": [], "doshaEffect": "vata" }
+      ],
+      "sequence": ["Tadasana", "Cat-Cow", "Child's Pose", "Forward Fold", "Corpse Pose"],
+      "durationMinutes": 30,
+      "frequencyPerWeek": 3,
+      "contraindications": ["Avoid vigorous vinyasa", "Avoid overexertion"]
+    },
+    "pitta": {
+      "poses": [
+        { "name": "Moon Salutation", "sanskritName": "Chandra Namaskar", "description": "Cooling moon sequence", "benefits": ["Cooling", "Calming", "Soothing"], "modifications": [], "doshaEffect": "pitta" },
+        { "name": "Seated Forward Bend", "sanskritName": "Paschimottanasana", "description": "Forward fold seated", "benefits": ["Cooling", "Introspective", "Calming"], "modifications": [], "doshaEffect": "pitta" },
+        { "name": "Fish Pose", "sanskritName": "Matsyasana", "description": "Heart-opening backbend", "benefits": ["Opens chest", "Cooling", "Releases tension"], "modifications": [], "doshaEffect": "pitta" }
+      ],
+      "sequence": ["Moon Salutation", "Cat-Cow", "Forward Fold", "Fish Pose", "Corpse Pose"],
+      "durationMinutes": 30,
+      "frequencyPerWeek": 4,
+      "contraindications": ["Avoid hot yoga", "Avoid competitive practice"]
+    },
+    "kapha": {
+      "poses": [
+        { "name": "Sun Salutation", "sanskritName": "Surya Namaskar", "description": "Energizing sun sequence", "benefits": ["Stimulating", "Warming", "Energizing"], "modifications": [], "doshaEffect": "kapha" },
+        { "name": "Warrior Pose", "sanskritName": "Virabhadrasana", "description": "Standing warrior pose", "benefits": ["Building strength", "Stamina", "Focus"], "modifications": [], "doshaEffect": "kapha" },
+        { "name": "Bridge Pose", "sanskritName": "Setu Bandhasana", "description": "Back-bending bridge pose", "benefits": ["Energizing", "Opening chest", "Stimulating"], "modifications": [], "doshaEffect": "kapha" }
+      ],
+      "sequence": ["Sun Salutation x5", "Warrior I", "Warrior II", "Bridge Pose", "Corpse Pose"],
+      "durationMinutes": 45,
+      "frequencyPerWeek": 5,
+      "contraindications": ["Don't overheat", "Keep steady pace"]
+    }
+  }
+}

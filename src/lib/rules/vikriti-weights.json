@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "thresholds": { "low": 15, "moderate": 30, "high": 99 },
+  "severityMultiplier": { "0": 0, "1": 1, "2": 2, "3": 3 },
+  "categories": {
+    "digestive": {
+      "gas_bloating": { "label": "Gas / bloating after meals", "doshaImpact": { "vata": 2, "pitta": 0, "kapha": 1 } },
+      "constipation": { "label": "Constipation / hard stools", "doshaImpact": { "vata": 3, "pitta": 0, "kapha": 1 } },
+      "loose_stools": { "label": "Loose stools / diarrhea", "doshaImpact": { "vata": 1, "pitta": 3, "kapha": 0 } },
+      "acidity_burning": { "label": "Acidity / burning / heartburn", "doshaImpact": { "vata": 0, "pitta": 3, "kapha": 0 } },
+      "cravings": { "label": "Strong food cravings", "doshaImpact": { "vata": 1, "pitta": 2, "kapha": 2 } }
+    },
+    "energy_mood": {
+      "fatigue": { "label": "Fatigue / low energy", "doshaImpact": { "vata": 2, "pitta": 1, "kapha": 2 } },
+      "anxiety": { "label": "Anxiety / nervousness", "doshaImpact": { "vata": 3, "pitta": 1, "kapha": 0 } },
+      "irritability": { "label": "Irritability / short temper", "doshaImpact": { "vata": 0, "pitta": 3, "kapha": 0 } },
+      "lethargy": { "label": "Lethargy / heaviness / sluggishness", "doshaImpact": { "vata": 0, "pitta": 0, "kapha": 3 } },
+      "sleep_disturbance": { "label": "Sleep disturbance", "doshaImpact": { "vata": 2, "pitta": 2, "kapha": 1 } }
+    },
+    "physical": {
+      "skin_issues": { "label": "Skin issues (dryness, rash, acne)", "doshaImpact": { "vata": 2, "pitta": 2, "kapha": 1 } },
+      "joint_muscle_pain": { "label": "Joint / muscle pain or stiffness", "doshaImpact": { "vata": 3, "pitta": 1, "kapha": 1 } },
+      "sweating": { "label": "Excessive or insufficient sweating", "doshaImpact": { "vata": 1, "pitta": 2, "kapha": 1 } },
+      "temperature_sensitivity": { "label": "Temperature sensitivity (hot/cold)", "doshaImpact": { "vata": 2, "pitta": 2, "kapha": 1 } }
+    },
+    "reproductive": {
+      "menstrual_irregular": { "label": "Irregular menstrual cycles", "doshaImpact": { "vata": 2, "pitta": 1, "kapha": 1 } },
+      "menstrual_pain": { "label": "Painful periods (dysmenorrhea)", "doshaImpact": { "vata": 3, "pitta": 2, "kapha": 0 } },
+      "heavy_bleeding": { "label": "Heavy bleeding (menorrhagia)", "doshaImpact": { "vata": 0, "pitta": 3, "kapha": 1 } },
+      "pms_mood": { "label": "PMS mood swings or irritability", "doshaImpact": { "vata": 1, "pitta": 2, "kapha": 1 } }
+    }
+  }
+}

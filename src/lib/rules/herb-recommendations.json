@@ -1,0 +1,44 @@
+{
+  "version": "1.0",
+  "noHerbMode": {
+    "description": "When red flags detected, client is pregnant, or on medications",
+    "message": "Herb recommendations are not provided due to safety considerations. Consult a qualified practitioner."
+  },
+  "herbs": {
+    "ashwagandha": {
+      "name": "Ashwagandha", "sanskritName": "Withania somnifera",
+      "form": "powder", "dosage": "1/2 tsp with warm milk at bedtime",
+      "timing": "Evening", "duration": "4-8 weeks",
+      "indications": ["Vata imbalance", "Anxiety", "Fatigue", "Poor sleep"],
+      "precautions": ["Avoid during pregnancy", "Avoid with hyperthyroidism", "May interact with sedatives"],
+      "doshaEffect": "Vata-Kapha" },
+    "triphala": {
+      "name": "Triphala", "sanskritName": "Triphala",
+      "form": "powder", "dosage": "1 tsp with warm water at bedtime",
+      "timing": "Bedtime", "duration": "Ongoing",
+      "indications": ["Digestive support", "Mild detox", "Regularity", "Eye health"],
+      "precautions": ["Start with small dose", "May cause loose stools initially"],
+      "doshaEffect": "Tridoshic" },
+    "tulsi": {
+      "name": "Holy Basil (Tulsi)", "sanskritName": "Ocimum sanctum",
+      "form": "tea", "dosage": "1 cup daily",
+      "timing": "Morning or afternoon", "duration": "Ongoing",
+      "indications": ["Stress", "Immunity", "Respiratory health", "Mental clarity"],
+      "precautions": ["May thin blood", "Avoid before surgery"],
+      "doshaEffect": "Vata-Kapha" },
+    "triphala_guggulu": {
+      "name": "Triphala Guggulu", "sanskritName": "Triphala Guggulu",
+      "form": "tablet", "dosage": "1 tablet twice daily after meals",
+      "timing": "After meals", "duration": "4-6 weeks",
+      "indications": ["Weight management", "Cholesterol", "Detox", "Kapha imbalance"],
+      "precautions": ["Avoid during pregnancy", "May interact with blood thinners"],
+      "doshaEffect": "Kapha" },
+    "shatavari": {
+      "name": "Shatavari", "sanskritName": "Asparagus racemosus",
+      "form": "powder", "dosage": "1 tsp with warm milk",
+      "timing": "Morning and evening", "duration": "8-12 weeks",
+      "indications": ["Female reproductive health", "Hormonal balance", "Digestive health"],
+      "precautions": ["Avoid with estrogen-sensitive conditions", "Consult doctor if pregnant"],
+      "doshaEffect": "Pitta-Vata" }
+  }
+}
