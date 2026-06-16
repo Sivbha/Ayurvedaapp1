@@ -2,18 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
+import { proxyFetch } from '@/lib/proxy-db';
 
 export default function ClientReportViewPage() {
   const params = useParams();
   const router = useRouter();
-  const supabase = createClient();
   const [report, setReport] = useState<any>(null);
 
   useEffect(() => {
-    supabase.from('reports').select('content').eq('assessment_id', params.id).eq('type', 'client').single()
-      .then(({ data }) => {
-        if (data?.content) setReport(data.content);
+    proxyFetch('reports', { assessment_id: params.id, type: 'client' }, { maybeSingle: true })
+      .then((res: any) => {
+        if (res.data?.content) setReport(res.data.content);
         else setReport({ error: 'Report not available yet' });
       });
   }, [params.id]);

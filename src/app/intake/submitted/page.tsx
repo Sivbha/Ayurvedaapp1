@@ -1,8 +1,11 @@
 'use client';
 
+import { useWizard } from '../layout';
 import Link from 'next/link';
 
 export default function SubmittedPage() {
+  const { assessmentId } = useWizard();
+
   return (
     <div className="text-center py-12">
       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
@@ -16,9 +19,9 @@ export default function SubmittedPage() {
         You will be able to view your personalized report once it has been reviewed.
       </p>
       <div className="mt-8 space-y-3">
-        <Link href="/client/report/pending"
+        <Link href={`/report/${assessmentId}`}
           className="block rounded-lg bg-amber-700 px-6 py-3 text-white hover:bg-amber-800">
-          View My Reports
+          View My Report
         </Link>
         <Link href="/"
           className="block rounded-lg border border-gray-300 px-6 py-3 text-gray-700 hover:bg-gray-50">

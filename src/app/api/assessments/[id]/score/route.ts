@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { calculatePrakriti } from '@/lib/scoring/prakriti';
 import { calculateVikriti } from '@/lib/scoring/vikriti';
 import { assessAgni } from '@/lib/scoring/agni';
@@ -10,13 +11,14 @@ import { notifyPractitionerNewSubmission } from '@/lib/email';
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createClient();
+  const admin = createAdminClient();
 
-  // Fetch all data
+  // Fetch all data using admin client to bypass RLS
   const [prakritiRes, vikritiRes, foodRes, symptomRes] = await Promise.all([
-    supabase.from('prakriti_answers').select('*').eq('assessment_id', id),
-    supabase.from('vikriti_answers').select('*').eq('assessment_id', id),
-    supabase.from('food_diary_entries').select('*').eq('assessment_id', id),
-    supabase.from('symptom_entries').select('*').eq('assessment_id', id),
+    admin.from('prakriti_answers').select('*').eq('assessment_id', id),
+    admin.from('vikriti_answers').select('*').eq('assessment_id', id),
+    admin.from('food_diary_entries').select('*').eq('assessment_id', id),
+    admin.from('symptom_entries').select('*').eq('assessment_id', id),
   ]);
 
   // Map to domain types
@@ -52,8 +54,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const amaResult = assessAma({ prakriti: prakritiResult, vikriti: vikritiResult, foodDiary, symptoms });
   const foodPatternResult = analyzeFoodPattern(foodDiary);
 
-  // Store scoring results
-  const { error } = await supabase.from('scoring_results').upsert({
+  // Store scoring results using admin client
+  const { error } = await admin.from('scoring_results').upsert({
     assessment_id: id,
     prakriti_vata: prakritiResult.normalized.vata, prakriti_pitta: prakritiResult.normalized.pitta, prakriti_kapha: prakritiResult.normalized.kapha,
     prakriti_dominant: prakritiResult.dominant, prakriti_confidence: prakritiResult.confidence, prakriti_raw: prakritiResult,
@@ -68,7 +70,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  await supabase.from('assessments').update({ status: 'submitted', submitted_at: new Date().toISOString() }).eq('id', id);
+  await admin.from('assessments').update({ status: 'submitted', submitted_at: new Date().toISOString() }).eq('id', id);
 
   notifyPractitionerNewSubmission(id).catch(() => {});
 
