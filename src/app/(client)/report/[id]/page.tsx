@@ -14,6 +14,10 @@ export default function ClientReportViewPage() {
       .then((res: any) => {
         if (res.data?.content) setReport(res.data.content);
         else setReport({ error: 'Report not available yet' });
+      })
+      .catch((err) => {
+        console.error('Report fetch error:', err);
+        setReport({ error: 'Failed to load report. Please try again later.' });
       });
   }, [params.id]);
 

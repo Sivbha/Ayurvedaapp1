@@ -8,6 +8,8 @@ const ALLOWED_TABLES = [
   'vikriti_answers',
   'food_diary_entries',
   'symptom_entries',
+  'scoring_results',
+  'reports',
 ];
 
 export async function POST(request: NextRequest) {
